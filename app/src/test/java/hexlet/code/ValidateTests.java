@@ -1,64 +1,86 @@
 package hexlet.code;
 
-import hexlet.code.schemas.NumberSchema;
-import hexlet.code.schemas.StringSchema;
+import hexlet.code.schemas.BaseSchema;
+import hexlet.code.schemas.Validator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateTests {
+    public static Validator v = new Validator();
+
     @ParameterizedTest(name = "{index} => input=\"{1}\", expected={2}")
     @MethodSource("stringSchemaValidationProvider")
-    void stringSchemaValidationTest(StringSchema schema, String input, boolean expected) {
+    void stringSchemaValidationTest(BaseSchema<String> schema, String input, boolean expected) {
         assertEquals(expected, schema.isValid(input));
     }
 
     @ParameterizedTest(name = "{index} => input=\"{1}\", expected={2}")
     @MethodSource("numberSchemaValidationProvider")
-    void numberSchemaValidationTest(NumberSchema schema, Integer input, boolean expected) {
+    void numberSchemaValidationTest(BaseSchema<Integer> schema, Integer input, boolean expected) {
+        assertEquals(expected, schema.isValid(input));
+    }
+
+    @ParameterizedTest(name = "{index} => input=\"{1}\", expected={2}")
+    @MethodSource("mapValidationProvider")
+    void mapSchemaValidationTest(BaseSchema<Map<Object, Object>> schema, Map<Object, Object> input, boolean expected) {
         assertEquals(expected, schema.isValid(input));
     }
 
     private static Stream<Arguments> stringSchemaValidationProvider() {
         return Stream.of(
-                Arguments.of(new StringSchema().required(), null, false),
-                Arguments.of(new StringSchema().required(), "", false),
-                Arguments.of(new StringSchema().required(), "  ", false),
-                Arguments.of(new StringSchema().required(), "abc", true),
+                Arguments.of(v.string().required(), null, false),
+                Arguments.of(v.string().required(), "", false),
+                Arguments.of(v.string().required(), "  ", false),
+                Arguments.of(v.string().required(), "abc", true),
 
-                Arguments.of(new StringSchema().minLength(5), "abcd", false),
-                Arguments.of(new StringSchema().minLength(3), "abcd", true),
-                Arguments.of(new StringSchema().minLength(3), null, false),
+                Arguments.of(v.string().minLength(5), "abcd", false),
+                Arguments.of(v.string().minLength(3), "abcd", true),
+                Arguments.of(v.string().minLength(3), null, false),
 
-                Arguments.of(new StringSchema().contains("test"), "this is a test", true),
-                Arguments.of(new StringSchema().contains("foo"), "this is a test", false),
-                Arguments.of(new StringSchema().contains("bar"), null, false),
+                Arguments.of(v.string().contains("test"), "this is a test", true),
+                Arguments.of(v.string().contains("foo"), "this is a test", false),
+                Arguments.of(v.string().contains("bar"), null, false),
 
-                Arguments.of(new StringSchema().required().minLength(3).contains("lo"), "hello", true),
-                Arguments.of(new StringSchema().required().minLength(3).contains("hi"), "hello", false)
+                Arguments.of(v.string().required().minLength(3).contains("lo"), "hello", true),
+                Arguments.of(v.string().required().minLength(3).contains("hi"), "hello", false)
         );
     }
 
     private static Stream<Arguments> numberSchemaValidationProvider() {
         return Stream.of(
-                Arguments.of(new NumberSchema(), null, true),
+                Arguments.of(v.number(), null, true),
 
-                Arguments.of(new NumberSchema().required(), null, false),
-                Arguments.of(new NumberSchema().required(), 5, true),
+                Arguments.of(v.number().required(), null, false),
+                Arguments.of(v.number().required(), 5, true),
 
-                Arguments.of(new NumberSchema().required().positive(), -10, false),
-                Arguments.of(new NumberSchema().required().positive(), 0, false),
-                Arguments.of(new NumberSchema().required().positive(), 10, true),
+                Arguments.of(v.number().required().positive(), -10, false),
+                Arguments.of(v.number().required().positive(), 0, false),
+                Arguments.of(v.number().required().positive(), 10, true),
 
-                Arguments.of(new NumberSchema().required().positive().range(5, 10), 5, true),
-                Arguments.of(new NumberSchema().required().positive().range(5, 10), 10, true),
-                Arguments.of(new NumberSchema().required().positive().range(5, 10), 4, false),
-                Arguments.of(new NumberSchema().required().positive().range(5, 10), 11, false),
-                Arguments.of(new NumberSchema().required().positive().range(5, 10), null, false)
+                Arguments.of(v.number().required().positive().range(5, 10), 5, true),
+                Arguments.of(v.number().required().positive().range(5, 10), 10, true),
+                Arguments.of(v.number().required().positive().range(5, 10), 4, false),
+                Arguments.of(v.number().required().positive().range(5, 10), 11, false),
+                Arguments.of(v.number().required().positive().range(5, 10), null, false)
+        );
+    }
+
+    private static Stream<Arguments> mapValidationProvider() {
+        return Stream.of(
+                Arguments.of(v.map().required(), null, false),
+                Arguments.of(v.map().required(), Map.of(), true),
+                Arguments.of(v.map(), null, true),
+                Arguments.of(v.map().sizeof(0), Map.of(), true),
+                Arguments.of(v.map().sizeof(2), Map.of("a", 1), false),
+                Arguments.of(v.map().sizeof(2), Map.of("a", 1, "b", 2), true),
+                Arguments.of(v.map().required().sizeof(1), Map.of(), false),
+                Arguments.of(v.map().required().sizeof(1), Map.of("key", "val"), true)
         );
     }
 }
