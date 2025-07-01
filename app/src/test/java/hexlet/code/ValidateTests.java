@@ -1,11 +1,13 @@
 package hexlet.code;
 
 import hexlet.code.schemas.BaseSchema;
+import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.Validator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -29,6 +31,20 @@ class ValidateTests {
     @ParameterizedTest(name = "{index} => input=\"{1}\", expected={2}")
     @MethodSource("mapValidationProvider")
     void mapSchemaValidationTest(BaseSchema<Map<Object, Object>> schema, Map<Object, Object> input, boolean expected) {
+        assertEquals(expected, schema.isValid(input));
+    }
+
+    @ParameterizedTest(name = "{index} => input={0}, expected={1}")
+    @MethodSource("shapeValidationProvider")
+    void testShapeValidation(Map<String, ?> input, boolean expected) {
+        MapSchema schema = v.map();
+
+        Map<String, BaseSchema<?>> shapeDefinition = new HashMap<>();
+        shapeDefinition.put("name", v.string().required());
+        shapeDefinition.put("age", v.number().positive());
+
+        schema.shape(shapeDefinition);
+
         assertEquals(expected, schema.isValid(input));
     }
 
@@ -81,6 +97,17 @@ class ValidateTests {
                 Arguments.of(v.map().sizeof(2), Map.of("a", 1, "b", 2), true),
                 Arguments.of(v.map().required().sizeof(1), Map.of(), false),
                 Arguments.of(v.map().required().sizeof(1), Map.of("key", "val"), true)
+        );
+    }
+
+    private static Stream<Arguments> shapeValidationProvider() {
+        return Stream.of(
+                Arguments.of(Map.of("name", "Alice", "age", 30), true),
+                Arguments.of(Map.of("name", "", "age", 25), false),
+                Arguments.of(Map.of("name", "Bob", "age", -5), false),
+                Arguments.of(Map.of("age", 20), false),
+                Arguments.of(Map.of("name", "Eva", "age", 1), true),
+                Arguments.of(Map.of(), false)
         );
     }
 }
