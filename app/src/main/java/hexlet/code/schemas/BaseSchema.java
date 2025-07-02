@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class BaseSchema <T> {
+public class BaseSchema<T> {
     protected final List<Predicate<T>> rules = new ArrayList<>();
 
     @SuppressWarnings("unchecked")

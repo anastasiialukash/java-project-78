@@ -2,7 +2,7 @@ package hexlet.code.schemas;
 import java.util.Objects;
 
 
-public class NumberSchema extends BaseSchema<Integer>{
+public class NumberSchema extends BaseSchema<Integer> {
     public NumberSchema required() {
         rules.add(Objects::nonNull);
         return this;
