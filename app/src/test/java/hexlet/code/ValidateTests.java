@@ -35,7 +35,7 @@ class ValidateTests {
 
     @ParameterizedTest(name = "{index} => input={0}, expected={1}")
     @MethodSource("shapeValidationProvider")
-    void mapShapeValidationTest(Map<String, ?> input, boolean expected) {
+    void mapShapeValidationTest(Map<String, BaseSchema<?>> input, boolean expected) {
         MapSchema schema = v.map();
 
         Map<String, BaseSchema<?>> shapeDefinition = new HashMap<>();
