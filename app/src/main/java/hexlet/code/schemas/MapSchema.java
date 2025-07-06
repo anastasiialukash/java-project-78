@@ -4,20 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MapSchema extends BaseSchema<Map<Object, Object>> {
-    private final Map<String, BaseSchema<?>> shapeRules = new HashMap<>();
+public class MapSchema<T> extends BaseSchema<Map<String, T>> {
+    private final Map<String, BaseSchema<T>> shapeRules = new HashMap<>();
 
-    public MapSchema required() {
+    public MapSchema<T> required() {
         rules.add(Objects::nonNull);
         return this;
     }
 
-    public MapSchema sizeof(int size) {
+    public MapSchema<T> sizeof(int size) {
         rules.add(val -> val != null && val.size() == size);
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema<?>> schemas) {
+    public MapSchema<T> shape(Map<String, BaseSchema<T>> schemas) {
         shapeRules.putAll(schemas);
 
         rules.add(map -> {
@@ -27,10 +27,9 @@ public class MapSchema extends BaseSchema<Map<Object, Object>> {
 
             for (var entry : shapeRules.entrySet()) {
                 String key = entry.getKey();
-                BaseSchema<?> schema = entry.getValue();
-                Object value = map.get(key);
+                BaseSchema<T> schema = entry.getValue();
 
-                if (!schema.isValid(value)) {
+                if (!schema.isValid(map.get(key))) {
                     return false;
                 }
             }
