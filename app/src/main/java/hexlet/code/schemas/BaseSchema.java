@@ -1,13 +1,17 @@
 package hexlet.code.schemas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class BaseSchema<T> {
-    protected final List<Predicate<T>> rules = new ArrayList<>();
+    protected final Map<String, Predicate<T>> rules = new LinkedHashMap<>();
+
+    protected void addValidator(String key, Predicate<T> validator) {
+        rules.put(key, validator);
+    }
 
     public boolean isValid(T inputToValidate) {
-        return rules.stream().allMatch(rule -> rule.test(inputToValidate));
+        return rules.values().stream().allMatch(v -> v.test(inputToValidate));
     }
 }

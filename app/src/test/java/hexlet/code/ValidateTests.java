@@ -53,6 +53,8 @@ class ValidateTests {
                 Arguments.of(v.string().required(), "", false),
                 Arguments.of(v.string().required(), "  ", false),
                 Arguments.of(v.string().required(), "abc", true),
+                Arguments.of(v.string(), "", true),
+                Arguments.of(v.string(), null, true),
 
                 Arguments.of(v.string().minLength(5), "abcd", false),
                 Arguments.of(v.string().minLength(3), "abcd", true),
