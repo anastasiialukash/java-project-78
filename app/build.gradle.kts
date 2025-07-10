@@ -5,6 +5,7 @@ plugins {
     id ("application")
     id ("checkstyle")
     id ("jacoco")
+    id("org.sonarqube") version "6.2.0.5505"
 }
 
 group = "hexlet.code"
@@ -12,6 +13,14 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "anastasiialukash_java-project-78")
+        property("sonar.organization", "anastasiialukash")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 dependencies {
