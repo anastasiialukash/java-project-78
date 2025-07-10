@@ -9,12 +9,12 @@ public class NumberSchema extends BaseSchema<Integer> {
     }
 
     public NumberSchema positive() {
-        rules.add(val -> val > 0);
+        rules.add(val -> val != null && val > 0);
         return this;
     }
 
     public NumberSchema range(int min, int max) {
-        rules.add(val -> val >= min && val <= max);
+        rules.add(val -> val != null && val >= min && val <= max);
         return this;
     }
 }
