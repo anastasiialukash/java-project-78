@@ -13,8 +13,6 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateTests {
-    public static Validator v = new Validator();
-
     @ParameterizedTest(name = "{index} => input=\"{1}\", expected={2}")
     @MethodSource("stringSchemaValidationProvider")
     void stringSchemaValidationTest(BaseSchema<String> schema, String input, boolean expected) {
@@ -36,6 +34,7 @@ class ValidateTests {
     @ParameterizedTest(name = "{index} => input={0}, expected={1}")
     @MethodSource("shapeValidationProvider")
     void mapShapeValidationTest(Map<String, BaseSchema<?>> input, boolean expected) {
+        Validator v = new Validator();
         MapSchema schema = v.map();
 
         Map<String, BaseSchema<?>> shapeDefinition = new HashMap<>();
@@ -48,6 +47,7 @@ class ValidateTests {
     }
 
     private static Stream<Arguments> stringSchemaValidationProvider() {
+        Validator v = new Validator();
         return Stream.of(
                 Arguments.of(v.string().required(), null, false),
                 Arguments.of(v.string().required(), "", false),
@@ -70,6 +70,7 @@ class ValidateTests {
     }
 
     private static Stream<Arguments> numberSchemaValidationProvider() {
+        Validator v = new Validator();
         return Stream.of(
                 Arguments.of(v.number(), null, true),
                 Arguments.of(v.number(), 123, true),
@@ -92,6 +93,7 @@ class ValidateTests {
     }
 
     private static Stream<Arguments> mapValidationProvider() {
+        Validator v = new Validator();
         return Stream.of(
                 Arguments.of(v.map().required(), null, false),
                 Arguments.of(v.map().required(), Map.of(), true),
