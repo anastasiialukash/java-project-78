@@ -9,12 +9,12 @@ public class NumberSchema extends BaseSchema<Integer> {
     }
 
     public NumberSchema positive() {
-        addValidator("positive", val -> val != null && val > 0);
+        addValidator("positive", val -> val == null || val > 0);
         return this;
     }
 
     public NumberSchema range(int min, int max) {
-        addValidator("range", val -> val != null && val >= min && val <= max);
+        addValidator("range", val -> val >= min && val <= max);
         return this;
     }
 }

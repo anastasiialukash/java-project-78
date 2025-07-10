@@ -72,6 +72,9 @@ class ValidateTests {
     private static Stream<Arguments> numberSchemaValidationProvider() {
         return Stream.of(
                 Arguments.of(v.number(), null, true),
+                Arguments.of(v.number(), 123, true),
+                Arguments.of(v.number(), -123, true),
+                Arguments.of(v.number().positive(), null, true),
 
                 Arguments.of(v.number().required(), null, false),
                 Arguments.of(v.number().required(), 5, true),
