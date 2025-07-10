@@ -26,10 +26,9 @@ public class Validator {
 
     /**
      * Creates a new schema for maps.
-     * @param <T> Type of the map's values
-     * @return a new MapSchema<T> instance
+     * @return a new MapSchema instance
      */
-    public <T> MapSchema<T> map() {
+    public MapSchema map() {
         return new MapSchema<>();
     }
 }
