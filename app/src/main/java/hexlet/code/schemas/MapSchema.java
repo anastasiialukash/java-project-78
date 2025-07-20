@@ -1,6 +1,5 @@
 package hexlet.code.schemas;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -9,8 +8,6 @@ import java.util.Objects;
  * @param <T> Type of the map's values
  */
 public class MapSchema<T> extends BaseSchema<Map<String, T>> {
-    private final Map<String, BaseSchema<T>> shapeRules = new HashMap<>();
-
     /**
      * Requires that the map is non-null.
      * @return this schema instance for chaining
@@ -33,23 +30,22 @@ public class MapSchema<T> extends BaseSchema<Map<String, T>> {
     /**
      * Defines the shape of the map: keys and their corresponding value schemas.
      * @param schemas Map of key names to their validation schemas
-     * @return this schema instance for chaining
      */
-    public MapSchema<T> shape(Map<String, BaseSchema<T>> schemas) {
-        shapeRules.putAll(schemas);
+    public void shape(Map<String, BaseSchema<T>> schemas) {
         addValidator("shape", map -> {
             if (map == null) {
                 return true;
             }
-            for (var entry : shapeRules.entrySet()) {
+
+            for (var entry : schemas.entrySet()) {
                 String key = entry.getKey();
                 BaseSchema<T> schema = entry.getValue();
-                if (!schema.isValid(map.get(key))) {
+                T value = map.get(key);
+                if (!schema.isValid(value)) {
                     return false;
                 }
             }
             return true;
         });
-        return this;
     }
 }

@@ -33,13 +33,13 @@ class ValidateTests {
 
     @ParameterizedTest(name = "{index} => input={0}, expected={1}")
     @MethodSource("shapeValidationProvider")
-    void mapShapeValidationTest(Map<String, BaseSchema<?>> input, boolean expected) {
+    void mapShapeValidationTest(Map<String, String> input, boolean expected) {
         Validator v = new Validator();
         MapSchema schema = v.map();
 
-        Map<String, BaseSchema<?>> shapeDefinition = new HashMap<>();
-        shapeDefinition.put("name", v.string().required());
-        shapeDefinition.put("age", v.number().positive());
+        Map<String, BaseSchema<String>> shapeDefinition = new HashMap<>();
+        shapeDefinition.put("firstName", v.string().required());
+        shapeDefinition.put("lastName", v.string().required().minLength(2));
 
         schema.shape(shapeDefinition);
 
@@ -108,11 +108,10 @@ class ValidateTests {
 
     private static Stream<Arguments> shapeValidationProvider() {
         return Stream.of(
-                Arguments.of(Map.of("name", "Alice", "age", 30), true),
-                Arguments.of(Map.of("name", "", "age", 25), false),
-                Arguments.of(Map.of("name", "Bob", "age", -5), false),
-                Arguments.of(Map.of("age", 20), false),
-                Arguments.of(Map.of("name", "Eva", "age", 1), true),
+                Arguments.of(Map.of("firstName", "Alice", "lastName", "King"), true),
+                Arguments.of(Map.of("firstName", "", "lastName", "King"), false),
+                Arguments.of(Map.of("firstName", "Bob", "lastName", "1"), false),
+                Arguments.of(Map.of("firstName", "Eva", "lastName", "Duke"), true),
                 Arguments.of(Map.of(), false)
         );
     }

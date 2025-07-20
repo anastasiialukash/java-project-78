@@ -29,6 +29,6 @@ public class Validator {
      * @return a new MapSchema instance
      */
     public MapSchema map() {
-        return new MapSchema<>();
+        return new MapSchema();
     }
 }
