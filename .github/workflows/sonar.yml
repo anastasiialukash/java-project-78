@@ -21,4 +21,6 @@ jobs:
           java-version: '17'
 
       - name: Build & run tests
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: make test

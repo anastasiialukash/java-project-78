@@ -19,7 +19,7 @@ run:
 	./gradlew run
 
 test:
-	./gradlew clean test jacocoTestReport sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+	./gradlew clean test jacocoTestReport sonarqube -Dsonar.login=$(SONAR_TOKEN)
 
 report:
 	./gradlew jacocoTestReport
