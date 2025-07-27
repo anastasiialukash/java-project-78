@@ -1,2 +1,4 @@
 test:
-    make -C app test
+	make -C app test
+
+.PHONY: test
