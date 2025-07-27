@@ -19,6 +19,7 @@ sonar {
         property("sonar.projectKey", "anastasiialukash_java-project-78")
         property("sonar.organization", "anastasiialukash")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.token", System.getenv("SONAR_TOKEN"))
         property("sonar.coverage.jacoco.xmlReportPaths",
         "build/reports/jacoco/test/jacocoTestReport.xml")
     }
